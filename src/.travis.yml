@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t docker-project -f Dockerfile.dev .
+script:
+  - docker run  -e CI=true docker-project npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $ACCESS_KEY_ID
+  secret_access_key:
+    secure: "$SECRET_ACCESS_KEY"
+  region: "ap-south-1"
+  app: "docker-project"
+  env: "Dockerproject-env"
+  bucket_name: "elasticbeanstalk-ap-south-1-550013944210"
+  bucket_path: "docker-project"
+  on:
+    branch: master
